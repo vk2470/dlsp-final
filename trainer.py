@@ -9,6 +9,8 @@ from matplotlib import pyplot as plt
 import random
 import os
 import argparse
+import time
+import json
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("device is", device)
@@ -90,7 +92,7 @@ class Autoencoder(nn.Module):
 def train_model(train_model, batch_train_loader, optimizer, loss_fn):
     train_model.train()
     losses_within_batch = []
-    for i, data in tqdm(enumerate(batch_train_loader), total=len(batch_train_loader), leave=False):
+    for i, data in tqdm(enumerate(batch_train_loader), total=len(batch_train_loader), leave=True):
         optimizer.zero_grad()
         input_data = data[0].to(device)
         pred = train_model(input_data)
@@ -113,10 +115,10 @@ def train(num_epochs, percentage_labelled):
 
     if not os.path.exists('test_images'):
         os.mkdir('test_images')
-
+    tic = time.time()
     for epoch in tqdm(range(num_epochs)):
         loss, auto_encoder_model = train_model(auto_encoder_model, labelled_trainloader, optimizer, criterion)
-        print("{} {}".format(epoch, loss))
+        tqdm.write("epoch: {} train loss: {} time elapsed: {}".format(epoch, loss, time.time() - tic))
         all_losses.append(loss)
 
         subset_indices = random.sample(range(0, len(testset)), 10)
@@ -133,6 +135,8 @@ def train(num_epochs, percentage_labelled):
             reconstructed_image = (reconstructed_image * 0.5) + 0.5
             plt.imshow(reconstructed_image)
             plt.savefig('test_images/{}_{}_reconstructed'.format(i, epoch))
+        json.dump(all_losses, open("loss.json", 'w'))
+    json.dump(all_losses, open("loss.json", 'w'))
     return all_losses
 
 
