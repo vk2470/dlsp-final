@@ -92,7 +92,7 @@ class Autoencoder(nn.Module):
 def train_model(train_model, batch_train_loader, optimizer, loss_fn):
     train_model.train()
     losses_within_batch = []
-    for i, data in tqdm(enumerate(batch_train_loader), total=len(batch_train_loader), leave=True):
+    for i, data in tqdm(enumerate(batch_train_loader), total=len(batch_train_loader), leave=False):
         optimizer.zero_grad()
         input_data = data[0].to(device)
         pred = train_model(input_data)
