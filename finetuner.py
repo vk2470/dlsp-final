@@ -41,6 +41,7 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
 def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader):
     lr = 0.001
     finetuner = FineTuner(auto_encoder_model, len(classes))
+    finetuner = finetuner.to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(finetuner.parameters(), lr=lr)
