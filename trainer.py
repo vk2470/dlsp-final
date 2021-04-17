@@ -129,6 +129,7 @@ def train_autoencoder_wrapper(auto_encoder_model, num_epochs, labelled_trainload
             plt.imshow(reconstructed_image)
             plt.savefig('{}/{}_{}_reconstructed'.format(folder_name, i, epoch))
         json.dump(all_losses, open("{}_auto_encoder_loss.json".format(folder_name), 'w'))
+        torch.save(auto_encoder_model.state_dict(), "{}/epoch_{}.pt".format(folder_name, epoch))
     return all_losses
 
 
