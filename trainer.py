@@ -114,7 +114,7 @@ def train(num_epochs, percentage_labelled):
     if not os.path.exists('test_images'):
         os.mkdir('test_images')
 
-    for epoch in range(num_epochs):
+    for epoch in tqdm(range(num_epochs)):
         loss, auto_encoder_model = train_model(auto_encoder_model, labelled_trainloader, optimizer, criterion)
         print("{} {}".format(epoch, loss))
         all_losses.append(loss)
@@ -123,13 +123,11 @@ def train(num_epochs, percentage_labelled):
         subset = torch.utils.data.Subset(testset, subset_indices)
         testloader_subset = torch.utils.data.DataLoader(subset, batch_size=1, num_workers=0, shuffle=False)
 
-        for i, data in tqdm(enumerate(testloader_subset)):
-            print("Original Image")
+        for i, data in enumerate(testloader_subset):
             original_data = data[0][0].permute(1, 2, 0)
             original_data = (original_data * 0.5) + 0.5
             plt.imshow(original_data)
             plt.savefig('test_images/{}_{}_original'.format(i, epoch))
-            print("Reconstructed Image")
             reconstructed_image = auto_encoder_model(data[0].to(device))[0].detach().cpu()
             reconstructed_image = reconstructed_image.permute(1, 2, 0)
             reconstructed_image = (reconstructed_image * 0.5) + 0.5
