@@ -16,7 +16,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("device is", device)
 
 
-def get_data(percentage_labelled):
+def get_data(percentage_labelled, percentage_unlabelled):
     transform = transforms.Compose(
         [transforms.ToTensor(),
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
@@ -27,6 +27,7 @@ def get_data(percentage_labelled):
                                             download=True, transform=transform)
     labelled_indices = random.sample(range(0, len(trainset)), int(percentage_labelled * len(trainset)))
     unlabelled_indices = [i for i in range(len(trainset)) if i not in labelled_indices]
+    unlabelled_indices = random.sample(unlabelled_indices, int(percentage_unlabelled * len(unlabelled_indices)))
     subset = torch.utils.data.Subset(trainset, labelled_indices)
     labelled_trainloader = torch.utils.data.DataLoader(subset, batch_size=1, num_workers=0, shuffle=False)
 
@@ -89,7 +90,7 @@ class Autoencoder(nn.Module):
         return x
 
 
-def train_model(train_model, batch_train_loader, optimizer, loss_fn):
+def train_autoencoder(train_model, batch_train_loader, optimizer, loss_fn):
     train_model.train()
     losses_within_batch = []
     for i, data in tqdm(enumerate(batch_train_loader), total=len(batch_train_loader), leave=False):
@@ -104,20 +105,12 @@ def train_model(train_model, batch_train_loader, optimizer, loss_fn):
     return final_loss, train_model
 
 
-def train(num_epochs, percentage_labelled):
-    labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled)
-    auto_encoder_model = Autoencoder()
-    auto_encoder_model = auto_encoder_model.to(device)
-    criterion = nn.MSELoss()
-    lr = 0.001
-    optimizer = optim.Adam(auto_encoder_model.parameters(), lr=lr)
-    all_losses = []
-
-    if not os.path.exists('test_images'):
-        os.mkdir('test_images')
+def train_autoencoder_wrapper(auto_encoder_model, num_epochs, labelled_trainloader, testset, optimizer,
+                              criterion, folder_name):
     tic = time.time()
+    all_losses = []
     for epoch in tqdm(range(num_epochs), leave=False):
-        loss, auto_encoder_model = train_model(auto_encoder_model, labelled_trainloader, optimizer, criterion)
+        loss, auto_encoder_model = train_autoencoder(auto_encoder_model, labelled_trainloader, optimizer, criterion)
         tqdm.write("epoch: {} train loss: {} time elapsed: {}".format(epoch, loss, time.time() - tic))
         all_losses.append(loss)
 
@@ -129,14 +122,31 @@ def train(num_epochs, percentage_labelled):
             original_data = data[0][0].permute(1, 2, 0)
             original_data = (original_data * 0.5) + 0.5
             plt.imshow(original_data)
-            plt.savefig('test_images/{}_{}_original'.format(i, epoch))
+            plt.savefig('{}/{}_{}_original'.format(folder_name, i, epoch))
             reconstructed_image = auto_encoder_model(data[0].to(device))[0].detach().cpu()
             reconstructed_image = reconstructed_image.permute(1, 2, 0)
             reconstructed_image = (reconstructed_image * 0.5) + 0.5
             plt.imshow(reconstructed_image)
-            plt.savefig('test_images/{}_{}_reconstructed'.format(i, epoch))
-        json.dump(all_losses, open("loss.json", 'w'))
-    json.dump(all_losses, open("loss.json", 'w'))
+            plt.savefig('{}/{}_{}_reconstructed'.format(folder_name, i, epoch))
+        json.dump(all_losses, open("{}_auto_encoder_loss.json".format(folder_name), 'w'))
+    return all_losses
+
+
+def train(num_epochs, percentage_labelled, percentage_unlabelled):
+    labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
+                                                                                 percentage_unlabelled)
+    auto_encoder_model = Autoencoder()
+    auto_encoder_model = auto_encoder_model.to(device)
+    criterion = nn.MSELoss()
+    lr = 0.001
+    optimizer = optim.Adam(auto_encoder_model.parameters(), lr=lr)
+    folder_name = '{}_{}_test_images'.format(percentage_labelled, percentage_unlabelled)
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name)
+
+    all_losses = train_autoencoder_wrapper(auto_encoder_model, num_epochs, labelled_trainloader, testset, optimizer,
+                                           criterion, folder_name)
+    json.dump(all_losses, open("{}_auto_encoder_loss.json".format(folder_name), 'w'))
     return all_losses
 
 
@@ -144,6 +154,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_epochs", type=int)
     parser.add_argument("--percentage_labelled", type=float)
+    parser.add_argument("--percentage_unlabelled", type=float)
     args = parser.parse_args()
-    all_losses = train(args.num_epochs, float(args.percentage_labelled))
+    all_losses = train(args.num_epochs, float(args.percentage_labelled), float(args.percentage_unlabelled))
 
