@@ -67,7 +67,7 @@ if __name__ == '__main__':
     parser.add_argument("--finetuner_num_epochs", type=int)
     parser.add_argument("--percentage_labelled", type=float)
     parser.add_argument("--percentage_unlabelled", type=float)
-
+    args = parser.parse_args()
     percentage_labelled = float(args.percentage_labelled)
     percentage_unlabelled = float(args.percentage_unlabelled)
 
