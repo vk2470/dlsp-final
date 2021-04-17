@@ -91,18 +91,21 @@ class FineTuner(nn.Module):
     def __init__(self, pretrained_model, num_classes):
         super(FineTuner, self).__init__()
         self.embedding = pretrained_model
-        self.fc1 = nn.Linear(128 * 3 * 3, 512)
+        self.fc1 = nn.Linear(128 * 30 * 30, 512)
         self.fc2 = nn.Linear(512, 128)
-        self.fc2 = nn.Linear(128, 84)
-        self.fc3 = nn.Linear(84, num_classes)
+        self.fc3 = nn.Linear(128, 84)
+        self.fc4 = nn.Linear(84, num_classes)
         self.finetuner = nn.Sequential(self.fc1,
                                        nn.ReLU(),
                                        self.fc2,
                                        nn.ReLU(),
-                                       self.fc3)
+                                       self.fc3,
+                                       nn.ReLU(),
+                                       self.fc4)
 
     def forward(self, x):
         x = self.embedding(x)
+        x = x.view(-1, 128 * 30 * 30)
         x = self.finetuner(x)
         return x
 
