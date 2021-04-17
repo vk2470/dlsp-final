@@ -104,12 +104,12 @@ class FineTuner(nn.Module):
                                        self.fc4)
 
     def forward(self, x):
-        x = self.embedding(x)
+        x = self.embedding.encoder(x)
         x = x.view(-1, 128 * 30 * 30)
         x = self.finetuner(x)
         return x
 
-
+    
 def train_model(model, batch_train_loader, optimizer, loss_fn, classification=False):
     model.train()
     losses_within_batch = []
