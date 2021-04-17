@@ -143,5 +143,5 @@ if __name__ == '__main__':
     parser.add_argument("--num_epochs", type=int)
     parser.add_argument("--percentage_labelled", type=float)
     args = parser.parse_args()
-    all_losses = train(args.num_epochs, args.percentage_labelled)
+    all_losses = train(args.num_epochs, float(args.percentage_labelled))
 
