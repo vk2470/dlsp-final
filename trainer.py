@@ -116,7 +116,7 @@ def train(num_epochs, percentage_labelled):
     if not os.path.exists('test_images'):
         os.mkdir('test_images')
     tic = time.time()
-    for epoch in tqdm(range(num_epochs)):
+    for epoch in tqdm(range(num_epochs), leave=False):
         loss, auto_encoder_model = train_model(auto_encoder_model, labelled_trainloader, optimizer, criterion)
         tqdm.write("epoch: {} train loss: {} time elapsed: {}".format(epoch, loss, time.time() - tic))
         all_losses.append(loss)
