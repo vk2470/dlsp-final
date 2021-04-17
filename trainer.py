@@ -23,7 +23,7 @@ def get_data(percentage_labelled):
 
     trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                             download=True, transform=transform)
-    labelled_indices = random.sample(range(0, len(trainset)), percentage_labelled * len(trainset))
+    labelled_indices = random.sample(range(0, len(trainset)), int(percentage_labelled * len(trainset)))
     unlabelled_indices = [i for i in range(len(trainset)) if i not in labelled_indices]
     subset = torch.utils.data.Subset(trainset, labelled_indices)
     labelled_trainloader = torch.utils.data.DataLoader(subset, batch_size=1, num_workers=0, shuffle=False)
