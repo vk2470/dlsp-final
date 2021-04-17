@@ -95,11 +95,10 @@ class FineTuner(nn.Module):
         self.fc2 = nn.Linear(512, 128)
         self.fc2 = nn.Linear(128, 84)
         self.fc3 = nn.Linear(84, num_classes)
-        self.relu = nn.ReLU()
         self.finetuner = nn.Sequential(self.fc1,
-                                       self.relu(),
+                                       nn.ReLU(),
                                        self.fc2,
-                                       self.relu(),
+                                       nn.ReLU(),
                                        self.fc3)
 
     def forward(self, x):
