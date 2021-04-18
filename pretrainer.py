@@ -12,6 +12,7 @@ def train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainlo
                               criterion, folder_name):
     tic = time.time()
     all_losses = []
+    prev_loss = np.inf
     for epoch in tqdm(range(num_epochs), leave=False):
         loss, _, auto_encoder_model = train_model(auto_encoder_model, unlabelled_trainloader, optimizer, criterion)
         tqdm.write("epoch: {} train loss: {} time elapsed: {}".format(epoch, loss, time.time() - tic))
@@ -32,11 +33,14 @@ def train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainlo
             plt.imshow(reconstructed_image)
             plt.savefig('{}/test_images/{}_{}_reconstructed'.format(folder_name, i, epoch))
         json.dump(all_losses, open("{}/epoch_{}_loss.json".format(folder_name, epoch), 'w'))
-        torch.save(auto_encoder_model.state_dict(), "{}/epoch_{}.pt".format(folder_name, epoch))
+        if loss < prev_loss:
+            prev_loss = loss
+            torch.save(auto_encoder_model.state_dict(), "{}/pretrainer.pt".format(folder_name))
 
     total_time = time.time() - tic
     print("total time taken: {}".format(total_time))
     json.dump([total_time], open('{}/time_taken.json'.format(folder_name), 'w'))
+    torch.save(auto_encoder_model.state_dict(), "{}/final_pretrainer.pt".format(folder_name))
     return all_losses
 
 
