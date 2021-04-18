@@ -48,13 +48,14 @@ if __name__ == '__main__':
     if not os.path.exists(finetuner_folder_name):
         os.mkdir(finetuner_folder_name)
 
-    auto_encoder_model, all_losses = pretrain(pretrainer_num_epochs, unlabelled_trainloader, testset,
-                                              pretrainer_folder_name, pretrainer_learning_rate)
+    auto_encoder_model, all_losses, all_test_losses = pretrain(pretrainer_num_epochs, unlabelled_trainloader,
+                                                               testloader, pretrainer_folder_name,
+                                                               pretrainer_learning_rate)
 
     # for param in auto_encoder_model.parameters():
     #     param.requires_grad = False
 
-    all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = \
+    all_train_losses, all_train_accuracies, all_finetuned_test_losses, all_test_accuracies = \
         finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, finetuner_folder_name,
                  finetuner_learning_rate, pretrainer_backbone_lr)
 
