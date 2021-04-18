@@ -70,6 +70,14 @@ if __name__ == '__main__':
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
                                                                                  percentage_unlabelled)
 
+    folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name)
+
+    folder_name = "{}/finetuner".format(folder_name)
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name)
+
     pretrained_model_path = args.pretrained_model_path
     finetuner_num_epochs = args.finetuner_num_epochs
     auto_encoder_model = load_pretrained_model(pretrained_model_path)
