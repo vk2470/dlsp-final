@@ -58,6 +58,8 @@ if __name__ == "__main__":
     parser.add_argument("--percentage_labelled", type=float)
     parser.add_argument("--percentage_unlabelled", type=float)
     parser.add_argument("--pretrainer_lr", type=float)
+    parser.add_argument("--batch_size", type=int)
+
     args = parser.parse_args()
 
     pretrainer_num_epochs = args.pretrainer_num_epochs
@@ -65,6 +67,7 @@ if __name__ == "__main__":
     percentage_labelled = float(args.percentage_labelled)
     percentage_unlabelled = float(args.percentage_unlabelled)
     learning_rate = float(args.pretrainer_lr)
+    batch_size = int(args.batch_size)
 
     folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
     if not os.path.exists(folder_name):
@@ -75,7 +78,8 @@ if __name__ == "__main__":
         os.mkdir(folder_name)
 
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
-                                                                                 percentage_unlabelled)
+                                                                                 percentage_unlabelled,
+                                                                                 batch_size)
 
     auto_encoder_model, all_losses = pretrain(pretrainer_num_epochs, unlabelled_trainloader, testset, folder_name,
                                               learning_rate)

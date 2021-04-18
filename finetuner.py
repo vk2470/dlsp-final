@@ -82,15 +82,18 @@ if __name__ == '__main__':
     parser.add_argument("--percentage_unlabelled", type=float)
     parser.add_argument("--finetuner_lr", type=float)
     parser.add_argument("--pretrainer_lr", type=float)
+    parser.add_argument("--batch_size", type=int)
 
     args = parser.parse_args()
     percentage_labelled = float(args.percentage_labelled)
     percentage_unlabelled = float(args.percentage_unlabelled)
     finetuner_learning_rate = float(args.finetuner_lr)
     pretrainer_learning_rate = float(args.pretrainer_lr)
+    batch_size = int(args.batch_size)
 
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
-                                                                                 percentage_unlabelled)
+                                                                                 percentage_unlabelled,
+                                                                                 batch_size)
 
     folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
     if not os.path.exists(folder_name):
