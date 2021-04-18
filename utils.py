@@ -25,9 +25,10 @@ def get_data(percentage_labelled, percentage_unlabelled, batch_size=32):
                                             download=True, transform=transform)
     all_labelled_datasets = []
     all_unlabelled_datasets = []
-    for each_target in trainset.targets:
-        tmp_trainset_indices = (trainset.targets == each_target)
-        tmp_trainset_indices = [idx for idx, val in tmp_trainset_indices if idx == True]
+    for each_target in set(trainset.targets):
+        tmp_trainset_indices = [i for i, each in enumerate(trainset.targets) if each == each_target]
+        # tmp_trainset_indices = (trainset.targets == each_target)
+        # tmp_trainset_indices = [idx for idx, val in tmp_trainset_indices if idx == True]
         labelled_indices = random.sample(range(0, len(tmp_trainset_indices)),
                                          int(percentage_labelled * len(tmp_trainset_indices)))
         unlabelled_indices = [i for i in range(len(tmp_trainset_indices)) if i not in labelled_indices]
@@ -110,10 +111,13 @@ class FineTuner(nn.Module):
         self.fc4 = nn.Linear(84, num_classes)
         self.finetuner = nn.Sequential(self.fc1,
                                        nn.ReLU(),
+                                       nn.Dropout(p=0.4),
                                        self.fc2,
                                        nn.ReLU(),
+                                       nn.Dropout(p=0.4),
                                        self.fc3,
                                        nn.ReLU(),
+                                       nn.Dropout(p=0.4),
                                        self.fc4)
 
     def forward(self, x):
