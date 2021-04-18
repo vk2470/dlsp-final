@@ -40,6 +40,11 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
                                                                                                                   time.time() - tic))
         all_test_losses.append(test_loss)
         all_test_accuracies.append(test_accuracy)
+        json.dump(all_test_losses, open("{}/epoch_{}_test_loss.json".format(folder_name, epoch), 'w'))
+
+    total_time = time.time() - tic
+    print("total time taken: {}".format(total_time))
+    json.dump([total_time], open('{}/time_taken.json'.format(folder_name), 'w'))
     return all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies
 
 

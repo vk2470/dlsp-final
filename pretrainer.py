@@ -33,6 +33,10 @@ def train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainlo
             plt.savefig('{}/test_images/{}_{}_reconstructed'.format(folder_name, i, epoch))
         json.dump(all_losses, open("{}/epoch_{}_loss.json".format(folder_name, epoch), 'w'))
         torch.save(auto_encoder_model.state_dict(), "{}/epoch_{}.pt".format(folder_name, epoch))
+
+    total_time = time.time() - tic
+    print("total time taken: {}".format(total_time))
+    json.dump([total_time], open('{}/time_taken.json'.format(folder_name), 'w'))
     return all_losses
 
 
