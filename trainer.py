@@ -15,6 +15,7 @@ if __name__ == '__main__':
     parser.add_argument("--percentage_unlabelled", type=float)
     parser.add_argument("--finetuner_lr", type=float)
     parser.add_argument("--pretrainer_lr", type=float)
+    parser.add_argument("--pretrainer_backbone_lr", type=float)
     args = parser.parse_args()
 
     pretrainer_num_epochs = args.pretrainer_num_epochs
@@ -23,6 +24,7 @@ if __name__ == '__main__':
     percentage_unlabelled = float(args.percentage_unlabelled)
     finetuner_learning_rate = float(args.finetuner_lr)
     pretrainer_learning_rate = float(args.pretrainer_lr)
+    pretrainer_backbone_lr = float(args.pretrainer_backbone_lr)
 
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
                                                                                  percentage_unlabelled)
@@ -46,9 +48,12 @@ if __name__ == '__main__':
     auto_encoder_model, all_losses = pretrain(pretrainer_num_epochs, unlabelled_trainloader, testset,
                                               pretrainer_folder_name, pretrainer_learning_rate)
 
+    # for param in auto_encoder_model.parameters():
+    #     param.requires_grad = False
+
     all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = \
         finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, finetuner_folder_name,
-                 finetuner_learning_rate)
+                 finetuner_learning_rate, pretrainer_backbone_lr)
 
 
 

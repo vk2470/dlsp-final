@@ -43,12 +43,14 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
     return all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies
 
 
-def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, folder_name, lr):
+def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, folder_name,
+             finetuning_lr, pretraining_lr):
     finetuner = FineTuner(auto_encoder_model, len(classes))
     finetuner = finetuner.to(device)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(finetuner.parameters(), lr=lr)
+    optimizer = optim.Adam([{'params': finetuner.parameters(), 'lr': finetuning_lr}],
+                           [{'params': auto_encoder_model.parameters, 'lr': pretraining_lr}])
 
     all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = finetuner_wrapper(finetuner,
                                                                                                      finetuner_num_epochs,
@@ -67,11 +69,13 @@ if __name__ == '__main__':
     parser.add_argument("--percentage_labelled", type=float)
     parser.add_argument("--percentage_unlabelled", type=float)
     parser.add_argument("--finetuner_lr", type=float)
+    parser.add_argument("--pretrainer_lr", type=float)
 
     args = parser.parse_args()
     percentage_labelled = float(args.percentage_labelled)
     percentage_unlabelled = float(args.percentage_unlabelled)
-    learning_rate = float(args.finetuner_lr)
+    finetuner_learning_rate = float(args.finetuner_lr)
+    pretrainer_learning_rate = float(args.pretrainer_lr)
 
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
                                                                                  percentage_unlabelled)
@@ -92,4 +96,5 @@ if __name__ == '__main__':
                                                                                             labelled_trainloader,
                                                                                             testloader,
                                                                                             folder_name,
-                                                                                            learning_rate)
+                                                                                            finetuner_learning_rate,
+                                                                                            pretrainer_learning_rate)

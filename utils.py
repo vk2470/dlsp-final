@@ -160,4 +160,5 @@ def load_pretrained_model(pretrained_model_path):
     for param in auto_encoder_model.parameters():
         param.requires_grad = False
 
+
     return auto_encoder_model
