@@ -49,8 +49,8 @@ def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, tes
     finetuner = finetuner.to(device)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam([{'params': finetuner.parameters(), 'lr': finetuning_lr}],
-                           [{'params': auto_encoder_model.parameters, 'lr': pretraining_lr}])
+    optimizer = optim.Adam([{'params': finetuner.parameters(), 'lr': finetuning_lr},
+                            {'params': auto_encoder_model.parameters, 'lr': pretraining_lr}])
 
     all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = finetuner_wrapper(finetuner,
                                                                                                      finetuner_num_epochs,
