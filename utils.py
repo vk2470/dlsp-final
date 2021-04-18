@@ -107,7 +107,7 @@ class FineTuner(nn.Module):
         self.embedding = pretrained_model
         self.conv1 = nn.Conv2d(3, 8, 3, padding=1)
         self.conv2 = nn.Conv2d(8, 16, 3, padding=1)
-        self.fc1 = nn.Linear(16 * 30 * 30, 512)
+        self.fc1 = nn.Linear(16 * 32 * 32, 512)
         self.fc2 = nn.Linear(512, 128)
         self.fc3 = nn.Linear(128, 84)
         self.fc4 = nn.Linear(84, num_classes)
