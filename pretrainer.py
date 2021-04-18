@@ -46,7 +46,7 @@ def pretrain(num_epochs, unlabelled_trainloader, testset, folder_name):
     all_losses = train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainloader, testset, optimizer,
                                            criterion, folder_name)
     json.dump(all_losses, open("{}_auto_encoder_loss.json".format(folder_name), 'w'))
-    return all_losses
+    return auto_encoder_model, all_losses
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
