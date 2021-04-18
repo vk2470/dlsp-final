@@ -166,6 +166,19 @@ def train_model(model, batch_train_loader, optimizer, loss_fn, classification=Fa
     return final_loss, final_accuracy, model
 
 
+def evaluate_autoencoder(model, batch_test_loader, optimizer, loss_fn):
+    model.eval()
+    losses_within_batch = []
+    for i, data in tqdm(enumerate(batch_test_loader), total=len(batch_test_loader), leave=False):
+        optimizer.zero_grad()
+        input_data = data[0].to(device)
+        pred = model(input_data)
+        tmp_loss = loss_fn(pred, input_data)
+        losses_within_batch.append(tmp_loss.item())
+    final_loss = np.mean(losses_within_batch)
+    return final_loss
+
+
 def evaluate_classification(model, batch_test_loader, loss_fn):
     model.eval()
     losses_within_batch = []
@@ -183,7 +196,6 @@ def evaluate_classification(model, batch_test_loader, loss_fn):
     final_loss = np.mean(losses_within_batch)
     final_accuracy = np.mean(accuracies_within_batch)
     return final_loss, final_accuracy
-
 
 def load_pretrained_model(pretrained_model_path):
     auto_encoder_model = Autoencoder()
