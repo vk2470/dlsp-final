@@ -29,6 +29,7 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
         all_train_losses.append(loss)
         all_train_accuracies.append(train_accuracy)
         json.dump(all_train_losses, open("{}/epoch_{}_loss.json".format(folder_name, epoch), 'w'))
+        json.dump(all_train_accuracies, open("{}/epoch_{}_accuracy.json".format(folder_name, epoch), 'w'))
         torch.save(finetuner_model.state_dict(), "{}/epoch_{}.pt".format(folder_name, epoch))
         test_loss, test_accuracy = evaluate_classification(finetuner_model, testloader, criterion)
         tqdm.write(
@@ -41,6 +42,7 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
         all_test_losses.append(test_loss)
         all_test_accuracies.append(test_accuracy)
         json.dump(all_test_losses, open("{}/epoch_{}_test_loss.json".format(folder_name, epoch), 'w'))
+        json.dump(all_test_accuracies, open("{}/epoch_{}_test_accuracy.json".format(folder_name, epoch), 'w'))
 
     total_time = time.time() - tic
     print("total time taken: {}".format(total_time))
