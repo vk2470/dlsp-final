@@ -16,23 +16,36 @@ from sklearn.metrics import f1_score
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def get_data(percentage_labelled, percentage_unlabelled):
+def get_data(percentage_labelled, percentage_unlabelled, batch_size=32):
     transform = transforms.Compose(
         [transforms.ToTensor(),
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    batch_size = 32
-
     trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                             download=True, transform=transform)
-    labelled_indices = random.sample(range(0, len(trainset)), int(percentage_labelled * len(trainset)))
-    unlabelled_indices = [i for i in range(len(trainset)) if i not in labelled_indices]
-    unlabelled_indices = random.sample(unlabelled_indices, int(percentage_unlabelled * len(unlabelled_indices)))
-    subset = torch.utils.data.Subset(trainset, labelled_indices)
-    labelled_trainloader = torch.utils.data.DataLoader(subset, batch_size=1, num_workers=0, shuffle=False)
+    all_labelled_datasets = []
+    all_unlabelled_datasets = []
+    for each_target in trainset.targets:
+        tmp_trainset_indices = (trainset.targets == each_target)
+        tmp_trainset_indices = [idx for idx, val in tmp_trainset_indices if idx == True]
+        labelled_indices = random.sample(range(0, len(tmp_trainset_indices)),
+                                         int(percentage_labelled * len(tmp_trainset_indices)))
+        unlabelled_indices = [i for i in range(len(tmp_trainset_indices)) if i not in labelled_indices]
+        unlabelled_indices = random.sample(unlabelled_indices, int(percentage_unlabelled * len(unlabelled_indices)))
+        subset = torch.utils.data.Subset(trainset, labelled_indices)
+        all_labelled_datasets.extend(subset)
 
-    subset = torch.utils.data.Subset(trainset, unlabelled_indices)
-    unlabelled_trainloader = torch.utils.data.DataLoader(subset, batch_size=1, num_workers=0, shuffle=False)
+        subset = torch.utils.data.Subset(trainset, unlabelled_indices)
+        all_unlabelled_datasets.extend(subset)
+
+
+    labelled_trainloader = torch.utils.data.DataLoader(all_labelled_datasets, batch_size=batch_size, num_workers=0,
+                                                       shuffle=False)
+    unlabelled_trainloader = torch.utils.data.DataLoader(all_unlabelled_datasets, batch_size=batch_size,
+                                                         num_workers=0, shuffle=False)
+
+    # subset = torch.utils.data.Subset(trainset, unlabelled_indices)
+    # unlabelled_trainloader = torch.utils.data.DataLoader(subset, batch_size=1, num_workers=0, shuffle=False)
 
     testset = torchvision.datasets.CIFAR10(root='./data', train=False,
                                            download=True, transform=transform)

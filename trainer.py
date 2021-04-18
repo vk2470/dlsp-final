@@ -16,6 +16,8 @@ if __name__ == '__main__':
     parser.add_argument("--finetuner_lr", type=float)
     parser.add_argument("--pretrainer_lr", type=float)
     parser.add_argument("--pretrainer_backbone_lr", type=float)
+    parser.add_argument("--batch_size", type=int)
+
     args = parser.parse_args()
 
     pretrainer_num_epochs = args.pretrainer_num_epochs
@@ -25,9 +27,10 @@ if __name__ == '__main__':
     finetuner_learning_rate = float(args.finetuner_lr)
     pretrainer_learning_rate = float(args.pretrainer_lr)
     pretrainer_backbone_lr = float(args.pretrainer_backbone_lr)
+    batch_size = int(args.batch_size)
 
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
-                                                                                 percentage_unlabelled)
+                                                                                 percentage_unlabelled, batch_size)
 
     base_folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
 
