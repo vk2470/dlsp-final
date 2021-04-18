@@ -133,9 +133,7 @@ class FineTuner(nn.Module):
 
     def forward(self, x):
         x = self.embedding.encoder(x)
-        print(x.shape)
         x = self.conv_input(x)
-        print(x.shape)
         x = x.view(-1, 32 * 30 * 30)
         x = self.finetuner(x)
         return x
