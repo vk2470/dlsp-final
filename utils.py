@@ -111,13 +111,15 @@ class FineTuner(nn.Module):
         self.fc2 = nn.Linear(512, 128)
         self.fc3 = nn.Linear(128, 84)
         self.fc4 = nn.Linear(84, num_classes)
+        self.conv_input = nn.Sequential(self.conv1, nn.ReLU(), nn.Dropout(p=0.4), self.conv2, nn.ReLU(),
+                                        nn.Dropout(p=0.4))
         self.finetuner = nn.Sequential(
-                                       self.conv1,
-                                       nn.ReLU(),
-                                       nn.Dropout(p=0.4),
-                                       self.conv2,
-                                       nn.ReLU(),
-                                       nn.Dropout(p=0.4),
+                                       # self.conv1,
+                                       # nn.ReLU(),
+                                       # nn.Dropout(p=0.4),
+                                       # self.conv2,
+                                       # nn.ReLU(),
+                                       # nn.Dropout(p=0.4),
                                        self.fc1,
                                        nn.ReLU(),
                                        nn.Dropout(p=0.4),
@@ -131,7 +133,7 @@ class FineTuner(nn.Module):
 
     def forward(self, x):
         x = self.embedding.encoder(x)
-        print(x.shape)
+        x = self.conv_input(x)
         x = x.view(-1, 32 * 32 * 32)
         x = self.finetuner(x)
         return x
