@@ -107,7 +107,7 @@ class FineTuner(nn.Module):
         self.embedding = pretrained_model
         self.conv1 = nn.Conv2d(128, 64, 3, padding=1)
         self.conv2 = nn.Conv2d(64, 32, 3, padding=1)
-        self.fc1 = nn.Linear(32 * 30 * 30, 4096)
+        self.fc1 = nn.Linear(32 * 30 * 30, num_classes)
         self.fc2 = nn.Linear(4096, 512)
         # self.fc3 = nn.Linear(1024, 512)
         # self.fc4 = nn.Linear(512, 64)
@@ -121,13 +121,13 @@ class FineTuner(nn.Module):
                                        # self.conv2,
                                        # nn.ReLU(),
                                        # nn.Dropout(p=0.4),
-                                       self.fc1,
-                                       nn.ReLU(),
-                                       nn.Dropout(p=0.4),
-                                       self.fc2,
-                                       nn.ReLU(),
-                                       nn.Dropout(p=0.4),
-                                       self.fc3)
+                                       self.fc1)
+                                       # nn.ReLU(),
+                                       # nn.Dropout(p=0.4),
+                                       # self.fc2,
+                                       # nn.ReLU(),
+                                       # nn.Dropout(p=0.4),
+                                       # self.fc3)
                                        # nn.ReLU(),
                                        # nn.Dropout(p=0.4),
                                        # self.fc4,
