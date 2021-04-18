@@ -109,7 +109,7 @@ class FineTuner(nn.Module):
         x = self.finetuner(x)
         return x
 
-    
+
 def train_model(model, batch_train_loader, optimizer, loss_fn, classification=False):
     model.train()
     losses_within_batch = []
@@ -138,7 +138,7 @@ def evaluate_classification(model, batch_test_loader, loss_fn):
     model.eval()
     losses_within_batch = []
     accuracies_within_batch = []
-    with torch.zero_grad():
+    with torch.no_grad():
         for i, data in tqdm(enumerate(batch_test_loader), total=len(batch_test_loader), leave=False):
             input_data = data[0].to(device)
             pred = model(input_data)

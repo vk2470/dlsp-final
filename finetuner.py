@@ -27,12 +27,15 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
     for epoch in tqdm(range(num_epochs), leave=False):
         loss, train_accuracy, finetuner_model = train_model(finetuner_model, labelled_trainloader, optimizer,
                                                                   criterion, classification=True)
-        tqdm.write("epoch: {} train loss: {} time elapsed: {}".format(epoch, loss, time.time() - tic))
         all_train_losses.append(loss)
         all_train_accuracies.append(train_accuracy)
         json.dump(all_train_losses, open("{}/epoch_{}_loss.json".format(folder_name, epoch), 'w'))
         torch.save(finetuner_model.state_dict(), "{}/epoch_{}.pt".format(folder_name, epoch))
         test_loss, test_accuracy = evaluate_classification(finetuner_model, testloader, criterion)
+        tqdm.write("epoch: {} train loss: {} test loss: {} test accuracy: {} time elapsed: {}".format(epoch, loss,
+                                                                                                      test_loss,
+                                                                                                      test_accuracy,
+                                                                                                      time.time() - tic))
         all_test_losses.append(test_loss)
         all_test_accuracies.append(test_accuracy)
     return all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies
@@ -46,7 +49,7 @@ def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, tes
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(finetuner.parameters(), lr=lr)
 
-    folder_name = '{}_{}_test_images'.format(percentage_labelled, percentage_unlabelled)
+    folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
 
     if not os.path.exists(folder_name):
         os.mkdir(folder_name)
