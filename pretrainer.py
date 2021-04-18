@@ -36,11 +36,10 @@ def train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainlo
     return all_losses
 
 
-def pretrain(num_epochs, unlabelled_trainloader, testset, folder_name):
+def pretrain(num_epochs, unlabelled_trainloader, testset, folder_name, lr):
     auto_encoder_model = Autoencoder()
     auto_encoder_model = auto_encoder_model.to(device)
     criterion = nn.MSELoss()
-    lr = 0.001
     optimizer = optim.Adam(auto_encoder_model.parameters(), lr=lr)
 
     all_losses = train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainloader, testset, optimizer,
@@ -54,12 +53,14 @@ if __name__ == "__main__":
     parser.add_argument("--finetuner_num_epochs", type=int)
     parser.add_argument("--percentage_labelled", type=float)
     parser.add_argument("--percentage_unlabelled", type=float)
+    parser.add_argument("--pretrainer_lr", type=float)
     args = parser.parse_args()
 
     pretrainer_num_epochs = args.pretrainer_num_epochs
     finetuner_num_epochs = args.finetuner_num_epochs
     percentage_labelled = float(args.percentage_labelled)
     percentage_unlabelled = float(args.percentage_unlabelled)
+    learning_rate = float(args.pretrainer_lr)
 
     folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
     if not os.path.exists(folder_name):
@@ -72,4 +73,5 @@ if __name__ == "__main__":
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
                                                                                  percentage_unlabelled)
 
-    auto_encoder_model, all_losses = pretrain(pretrainer_num_epochs, unlabelled_trainloader, testset, folder_name)
+    auto_encoder_model, all_losses = pretrain(pretrainer_num_epochs, unlabelled_trainloader, testset, folder_name,
+                                              learning_rate)

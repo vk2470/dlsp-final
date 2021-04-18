@@ -41,8 +41,7 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
     return all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies
 
 
-def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, folder_name):
-    lr = 0.001
+def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, folder_name, lr):
     finetuner = FineTuner(auto_encoder_model, len(classes))
     finetuner = finetuner.to(device)
 
@@ -63,9 +62,12 @@ if __name__ == '__main__':
     parser.add_argument("--finetuner_num_epochs", type=int)
     parser.add_argument("--percentage_labelled", type=float)
     parser.add_argument("--percentage_unlabelled", type=float)
+    parser.add_argument("--finetuner_lr", type=float)
+
     args = parser.parse_args()
     percentage_labelled = float(args.percentage_labelled)
     percentage_unlabelled = float(args.percentage_unlabelled)
+    learning_rate = float(args.finetuner_lr)
 
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
                                                                                  percentage_unlabelled)
@@ -84,4 +86,6 @@ if __name__ == '__main__':
     all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = finetune(auto_encoder_model,
                                                                                             finetuner_num_epochs,
                                                                                             labelled_trainloader,
-                                                                                            testloader)
+                                                                                            testloader,
+                                                                                            folder_name,
+                                                                                            learning_rate)

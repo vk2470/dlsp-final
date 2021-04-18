@@ -13,12 +13,16 @@ if __name__ == '__main__':
     parser.add_argument("--finetuner_num_epochs", type=int)
     parser.add_argument("--percentage_labelled", type=float)
     parser.add_argument("--percentage_unlabelled", type=float)
+    parser.add_argument("--finetuner_lr", type=float)
+    parser.add_argument("--pretrainer_lr", type=float)
     args = parser.parse_args()
 
     pretrainer_num_epochs = args.pretrainer_num_epochs
     finetuner_num_epochs = args.finetuner_num_epochs
     percentage_labelled = float(args.percentage_labelled)
     percentage_unlabelled = float(args.percentage_unlabelled)
+    finetuner_learning_rate = float(args.finetuner_lr)
+    pretrainer_learning_rate = float(args.pretrainer_lr)
 
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
                                                                                  percentage_unlabelled)
@@ -40,10 +44,11 @@ if __name__ == '__main__':
         os.mkdir(finetuner_folder_name)
 
     auto_encoder_model, all_losses = pretrain(pretrainer_num_epochs, unlabelled_trainloader, testset,
-                                              pretrainer_folder_name)
+                                              pretrainer_folder_name, pretrainer_learning_rate)
 
     all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = \
-        finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, finetuner_folder_name)
+        finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, finetuner_folder_name,
+                 finetuner_learning_rate)
 
 
 
