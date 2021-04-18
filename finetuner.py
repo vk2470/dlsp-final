@@ -50,7 +50,7 @@ def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, tes
 
     my_list = [x[0] for x in auto_encoder_model.named_parameters() if 'encoder' in x]
     params = list(map(lambda x: x[1], list(filter(lambda kv: kv[0] in my_list, finetuner.named_parameters()))))
-    base_params = list(map(lambda x: x[1], list(filter(lambda kv: kv[0] not in my_list, model.named_parameters()))))
+    base_params = list(map(lambda x: x[1], list(filter(lambda kv: kv[0] not in my_list, finetuner.named_parameters()))))
 
     optimizer = optim.Adam([{'params': base_params}, {'params': params, 'lr': pretraining_lr}], lr=finetuning_lr)
     criterion = nn.CrossEntropyLoss()
