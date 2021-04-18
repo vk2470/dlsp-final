@@ -32,6 +32,9 @@ if __name__ == '__main__':
     if not os.path.exists(pretrainer_folder_name):
         os.mkdir(pretrainer_folder_name)
 
+    if not os.path.exists("{}/test_images".format(pretrainer_folder_name)):
+        os.mkdir("{}/test_images".format(pretrainer_folder_name))
+
     finetuner_folder_name = "{}/finetuner".format(base_folder_name)
     if not os.path.exists(finetuner_folder_name):
         os.mkdir(finetuner_folder_name)
