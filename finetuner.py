@@ -13,7 +13,6 @@ import time
 import json
 from utils import *
 
-
 classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
@@ -26,16 +25,19 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
     all_test_accuracies = []
     for epoch in tqdm(range(num_epochs), leave=False):
         loss, train_accuracy, finetuner_model = train_model(finetuner_model, labelled_trainloader, optimizer,
-                                                                  criterion, classification=True)
+                                                            criterion, classification=True)
         all_train_losses.append(loss)
         all_train_accuracies.append(train_accuracy)
         json.dump(all_train_losses, open("{}/epoch_{}_loss.json".format(folder_name, epoch), 'w'))
         torch.save(finetuner_model.state_dict(), "{}/epoch_{}.pt".format(folder_name, epoch))
         test_loss, test_accuracy = evaluate_classification(finetuner_model, testloader, criterion)
-        tqdm.write("epoch: {} train loss: {} test loss: {} test accuracy: {} time elapsed: {}".format(epoch, loss,
-                                                                                                      test_loss,
-                                                                                                      test_accuracy,
-                                                                                                      time.time() - tic))
+        tqdm.write(
+            "epoch: {} train loss: train accuracy: {} {} test loss: {} test accuracy: {} time elapsed: {}".format(epoch,
+                                                                                                                  loss,
+                                                                                                                  train_accuracy,
+                                                                                                                  test_loss,
+                                                                                                                  test_accuracy,
+                                                                                                                  time.time() - tic))
         all_test_losses.append(test_loss)
         all_test_accuracies.append(test_accuracy)
     return all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies
@@ -49,10 +51,12 @@ def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, tes
     optimizer = optim.Adam(finetuner.parameters(), lr=lr)
 
     all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = finetuner_wrapper(finetuner,
-                                                                                               finetuner_num_epochs,
-                                                                                               labelled_trainloader,
-                                                                                               testloader, optimizer,
-                                                                                               criterion, folder_name)
+                                                                                                     finetuner_num_epochs,
+                                                                                                     labelled_trainloader,
+                                                                                                     testloader,
+                                                                                                     optimizer,
+                                                                                                     criterion,
+                                                                                                     folder_name)
     return all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies
 
 
