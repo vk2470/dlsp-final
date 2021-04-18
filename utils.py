@@ -107,7 +107,7 @@ class FineTuner(nn.Module):
         self.embedding = pretrained_model
         self.conv1 = nn.Conv2d(128, 64, 3, padding=1)
         self.conv2 = nn.Conv2d(64, 32, 3, padding=1)
-        self.fc1 = nn.Linear(32 * 30 * 30, num_classes)
+        self.fc1 = nn.Linear(128 * 30 * 30, num_classes)
         self.fc2 = nn.Linear(4096, 512)
         # self.fc3 = nn.Linear(1024, 512)
         # self.fc4 = nn.Linear(512, 64)
@@ -135,10 +135,9 @@ class FineTuner(nn.Module):
                                        # self.fc5)
 
     def forward(self, x):
-        x = self.embedding.encoder(x)
-        print(x.shape)
+        x = self.embedding.encoder(x) #32, 128, 30, 30
         # x = self.conv_input(x)
-        x = x.view(-1, 32 * 30 * 30)
+        x = x.view(-1, 128 * 30 * 30)
         x = self.finetuner(x)
         return x
 
