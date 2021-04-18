@@ -75,10 +75,23 @@ if __name__ == '__main__':
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
                                                                                  percentage_unlabelled)
 
-    auto_encoder_model, all_losses = pretrain(pretrainer_num_epochs, unlabelled_trainloader, testset)
+    folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
+
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name)
+
+    folder_name = "{}/pretrainer".format(folder_name)
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name)
+
+    folder_name = "{}/finetuner".format(folder_name)
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name)
+
+    auto_encoder_model, all_losses = pretrain(pretrainer_num_epochs, unlabelled_trainloader, testset, folder_name)
 
     all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = \
-        finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader)
+        finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, folder_name)
 
 
 

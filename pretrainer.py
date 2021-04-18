@@ -36,19 +36,12 @@ def train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainlo
     return all_losses
 
 
-def pretrain(num_epochs, unlabelled_trainloader, testset):
+def pretrain(num_epochs, unlabelled_trainloader, testset, folder_name):
     auto_encoder_model = Autoencoder()
     auto_encoder_model = auto_encoder_model.to(device)
     criterion = nn.MSELoss()
     lr = 0.001
     optimizer = optim.Adam(auto_encoder_model.parameters(), lr=lr)
-    folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name)
-
-    folder_name = "{}/pretrainer".format(folder_name)
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name)
 
     all_losses = train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainloader, testset, optimizer,
                                            criterion, folder_name)

@@ -41,22 +41,13 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
     return all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies
 
 
-def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader):
+def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, folder_name):
     lr = 0.001
     finetuner = FineTuner(auto_encoder_model, len(classes))
     finetuner = finetuner.to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(finetuner.parameters(), lr=lr)
-
-    folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
-
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name)
-
-    folder_name = "{}/finetuner".format(folder_name)
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name)
 
     all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = finetuner_wrapper(finetuner,
                                                                                                finetuner_num_epochs,
