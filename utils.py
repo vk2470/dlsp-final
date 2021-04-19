@@ -104,15 +104,14 @@ class FineTuner(nn.Module):
         self.embedding = pretrained_model
         self.conv1 = nn.Conv2d(64, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 16, 3, padding=1)
-        self.fc1 = nn.Linear(16 * 2 * 2, num_classes)
+        self.fc1 = nn.Linear(16 * 4 * 4, num_classes)
         self.finetuner = nn.Sequential(self.conv1, nn.ReLU(), nn.Dropout(p=0.4), self.conv2, nn.ReLU(), nn.Dropout(0.4))
         self.fc_layers = nn.Sequential(self.fc1)
 
     def forward(self, x):
         x = self.embedding.encoder(x) #64*4*4
         x = self.finetuner(x)
-        print(x.shape)
-        x = x.view(-1, 16 * 2 * 2)
+        x = x.view(-1, 16 * 4 * 4)
         x = self.fc_layers(x)
         return x
 
