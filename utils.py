@@ -65,22 +65,25 @@ def weights_init(m):
 class Autoencoder(nn.Module):
     def __init__(self):
         super(Autoencoder, self).__init__()
-        self.layer_0 = nn.Conv2d(3, 8, 3, stride=2, padding=1)
-        self.layer_1 = nn.Conv2d(8, 16, 3, stride=2, padding=1)
+        self.layer_0 = nn.Conv2d(3, 8, 3, padding=1)
+        self.layer_1 = nn.Conv2d(8, 16, 3, padding=1)
         self.relu = nn.ReLU()
-        self.layer_2 = nn.Conv2d(16, 32, 3, stride=2, padding=1)
+        self.layer_2 = nn.Conv2d(16, 32, 3, padding=1)
         self.layer_3 = nn.Conv2d(32, 64, 4)
-        self.encoder = nn.Sequential(  # like the Composition layer you built
-            nn.Conv2d(3, 8, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(8, 16, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(16, 32, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(32, 64, 3, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(64, 128, 3),
-        )
+        # self.encoder = nn.Sequential(  # like the Composition layer you built
+        #     nn.Conv2d(3, 8, 3, padding=1),
+        #     nn.ReLU(),
+        #     nn.Conv2d(8, 16, 3, padding=1),
+        #     nn.ReLU(),
+        #     nn.Conv2d(16, 32, 3, padding=1),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 64, 3, padding=1),
+        #     nn.ReLU(),
+        #     nn.Conv2d(64, 128, 3),
+        # )
+        # self.encoder = nn.Sequential(
+        #
+        # )
 
         self.decoder = nn.Sequential(
             nn.ConvTranspose2d(128, 64, 3),
@@ -96,8 +99,19 @@ class Autoencoder(nn.Module):
         )
 
     def forward(self, x):
-        x = self.encoder(x)
+        # x = self.encoder(x)
+        # x = self.decoder(x)
+        print("0", x.shape)
+        x = self.layer_0(x)
+        print("1", x.shape)
+        x = self.layer_1(x)
+        print("2", x.shape)
+        x = self.layer_2(x)
+        print("3", x.shape)
+        x = self.layer_3(x)
+        print("4", x.shape)
         x = self.decoder(x)
+        print("5", x.shape)
         return x
 
 
