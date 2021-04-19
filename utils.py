@@ -70,11 +70,11 @@ class Autoencoder(nn.Module):
         self.relu = nn.ReLU()
         self.encoder_layer_2 = nn.Conv2d(32, 64, 7)
         self.encoder = nn.Sequential(  # like the Composition layer you built
-            self.layer_0,
+            self.encoder_layer_0,
             self.relu,
-            self.layer_1,
+            self.encoder_layer_1,
             self.relu,
-            self.layer_2
+            self.encoder_layer_2
         )
 
         self.decoder_layer_0 = nn.ConvTranspose2d(64, 32, 7)
