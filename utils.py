@@ -68,7 +68,7 @@ class Autoencoder(nn.Module):
         self.encoder_layer_0 = nn.Conv2d(3, 16, 3, padding=1, stride=2)
         self.encoder_layer_1 = nn.Conv2d(16, 32, 3, padding=1, stride=2)
         self.relu = nn.ReLU()
-        self.encoder_layer_2 = nn.Conv2d(32, 64, 7)
+        self.encoder_layer_2 = nn.Conv2d(32, 64, 5)
         self.encoder = nn.Sequential(  # like the Composition layer you built
             self.encoder_layer_0,
             self.relu,
@@ -77,7 +77,7 @@ class Autoencoder(nn.Module):
             self.encoder_layer_2
         )
 
-        self.decoder_layer_0 = nn.ConvTranspose2d(64, 32, 7)
+        self.decoder_layer_0 = nn.ConvTranspose2d(64, 32, 5)
         self.decoder_layer_1 = nn.ConvTranspose2d(32, 16, 3, padding=1, output_padding=1, stride=2)
         self.decoder_layer_2 = nn.ConvTranspose2d(16, 3, 3, padding=1, output_padding=1, stride=2)
 
@@ -102,40 +102,17 @@ class FineTuner(nn.Module):
     def __init__(self, pretrained_model, num_classes):
         super(FineTuner, self).__init__()
         self.embedding = pretrained_model
-        self.conv1 = nn.Conv2d(128, 64, 3, padding=1)
-        self.conv2 = nn.Conv2d(64, 32, 3, padding=1)
-        self.fc1 = nn.Linear(128 * 30 * 30, num_classes)
-        self.fc2 = nn.Linear(4096, 512)
-        # self.fc3 = nn.Linear(1024, 512)
-        # self.fc4 = nn.Linear(512, 64)
-        self.fc3 = nn.Linear(512, num_classes)
-        self.conv_input = nn.Sequential(self.conv1, nn.ReLU(), nn.Dropout(p=0.4), self.conv2, nn.ReLU(),
-                                        nn.Dropout(p=0.4))
-        self.finetuner = nn.Sequential(
-                                       # self.conv1,
-                                       # nn.ReLU(),
-                                       # nn.Dropout(p=0.4),
-                                       # self.conv2,
-                                       # nn.ReLU(),
-                                       # nn.Dropout(p=0.4),
-                                       self.fc1)
-                                       # nn.ReLU(),
-                                       # nn.Dropout(p=0.4),
-                                       # self.fc2,
-                                       # nn.ReLU(),
-                                       # nn.Dropout(p=0.4),
-                                       # self.fc3)
-                                       # nn.ReLU(),
-                                       # nn.Dropout(p=0.4),
-                                       # self.fc4,
-                                       # nn.ReLU(),
-                                       # self.fc5)
+        self.conv1 = nn.Conv2d(64, 32, 3, padding=1)
+        self.conv2 = nn.Conv2d(32, 16, 3, padding=1)
+        self.fc1 = nn.Linear(16 * 2 * 2, num_classes)
+        self.finetuner = nn.Sequential(self.conv1, nn.ReLU(), nn.Dropout(p=0.4), self.conv2, nn.ReLU(), nn.Dropout(0.4))
+        self.fc_layers = nn.Sequential(self.fc1)
 
     def forward(self, x):
-        x = self.embedding.encoder(x) #32, 128, 30, 30
-        # x = self.conv_input(x)
-        x = x.view(-1, 128 * 30 * 30)
+        x = self.embedding.encoder(x) #64*4*4
         x = self.finetuner(x)
+        x = x.view(-1, 16 * 2 * 2)
+        x = self.fc_layers(x)
         return x
 
 
