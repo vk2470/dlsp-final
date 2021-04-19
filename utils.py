@@ -19,7 +19,12 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def get_data(percentage_labelled, percentage_unlabelled, batch_size=32):
     transform = transforms.Compose(
         [transforms.ToTensor(),
-         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+         transforms.RandomApply(transforms.GaussianBlur(7), p=0.5),
+         transforms.RandomHorizontalFlip(p=0.5),
+         transforms.RandomVerticalFlip(p=0.5)
+
+         ])
 
     trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                             download=True, transform=transform)
