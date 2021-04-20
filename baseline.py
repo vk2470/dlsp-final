@@ -17,7 +17,7 @@ classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
 
-def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloader, optimizer, criterion, folder_name):
+def baseline_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloader, optimizer, criterion, folder_name):
     tic = time.time()
     all_train_losses = []
     all_test_losses = []
@@ -54,22 +54,17 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
     return all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies
 
 
-def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, folder_name,
-             finetuning_lr, pretraining_lr):
-    finetuner = FineTuner(auto_encoder_model, len(classes))
-    finetuner = finetuner.to(device)
+def baseline(baseline_num_epochs, labelled_trainloader, testloader, folder_name,
+             baseline_lr):
+    baseline = BaseLine(len(classes))
+    baseline = baseline.to(device)
 
-    my_list = [x[0] for x in auto_encoder_model.named_parameters() if 'encoder' in x]
-    params = list(map(lambda x: x[1], list(filter(lambda kv: kv[0] in my_list, finetuner.named_parameters()))))
-    base_params = list(map(lambda x: x[1], list(filter(lambda kv: kv[0] not in my_list, finetuner.named_parameters()))))
+    optimizer = optim.Adam(baseline.parameters(), lr=baseline_lr)
 
-    optimizer = optim.Adam([{'params': base_params}, {'params': params, 'lr': pretraining_lr}], lr=finetuning_lr)
     criterion = nn.CrossEntropyLoss()
-    # optimizer = optim.Adam([{'params': finetuner.parameters(), 'lr': finetuning_lr},
-    #                         {'params': auto_encoder_model.parameters(), 'lr': pretraining_lr}])
 
-    all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = finetuner_wrapper(finetuner,
-                                                                                                     finetuner_num_epochs,
+    all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = baseline_wrapper(baseline,
+                                                                                                     baseline_num_epochs,
                                                                                                      labelled_trainloader,
                                                                                                      testloader,
                                                                                                      optimizer,
@@ -80,40 +75,27 @@ def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, tes
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--pretrained_model_path", type=str)
-    parser.add_argument("--finetuner_num_epochs", type=int)
-    parser.add_argument("--percentage_labelled", type=float)
-    parser.add_argument("--percentage_unlabelled", type=float)
-    parser.add_argument("--finetuner_lr", type=float)
-    parser.add_argument("--pretrainer_lr", type=float)
+    parser.add_argument("--baseline_num_epochs", type=int)
+    parser.add_argument("--baseline_lr", type=float)
     parser.add_argument("--batch_size", type=int)
 
     args = parser.parse_args()
-    percentage_labelled = float(args.percentage_labelled)
-    percentage_unlabelled = float(args.percentage_unlabelled)
-    finetuner_learning_rate = float(args.finetuner_lr)
-    pretrainer_learning_rate = float(args.pretrainer_lr)
+    baseline_learning_rate = float(args.baseline_lr)
     batch_size = int(args.batch_size)
 
-    labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
-                                                                                 percentage_unlabelled,
-                                                                                 batch_size)
+    labelled_trainloader, _, testset, testloader = get_data(1.0, 0.0, batch_size)
 
-    folder_name = '{}_{}_runs'.format(percentage_labelled, percentage_unlabelled)
+    folder_name = '{}_{}_runs'.format("1.0", "0.0")
     if not os.path.exists(folder_name):
         os.mkdir(folder_name)
 
-    folder_name = "{}/finetuner".format(folder_name)
+    folder_name = "{}/baseline".format(folder_name)
     if not os.path.exists(folder_name):
         os.mkdir(folder_name)
 
-    pretrained_model_path = args.pretrained_model_path
-    finetuner_num_epochs = args.finetuner_num_epochs
-    auto_encoder_model = load_pretrained_model(pretrained_model_path)
-    all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = finetune(auto_encoder_model,
-                                                                                            finetuner_num_epochs,
+    baseline_num_epochs = args.baseline_num_epochs
+    all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies = baseline(baseline_num_epochs,
                                                                                             labelled_trainloader,
                                                                                             testloader,
                                                                                             folder_name,
-                                                                                            finetuner_learning_rate,
-                                                                                            pretrainer_learning_rate)
+                                                                                            baseline_learning_rate)

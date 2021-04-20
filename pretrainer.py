@@ -18,7 +18,7 @@ def train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainlo
     prev_loss = np.inf
     for epoch in tqdm(range(num_epochs), leave=False):
         loss, _, auto_encoder_model = train_model(auto_encoder_model, unlabelled_trainloader, optimizer, criterion)
-        test_loss = evaluate_autoencoder(auto_encoder_model, testloader, optimizer, criterion)
+        test_loss = evaluate_autoencoder(auto_encoder_model, testloader, criterion)
         tqdm.write("epoch: {} train loss: {} test loss: {} time elapsed: {}".format(epoch, loss, test_loss,
                                                                                     time.time() - tic))
         all_losses.append(loss)
