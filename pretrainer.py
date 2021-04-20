@@ -18,11 +18,11 @@ def train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainlo
     prev_loss = np.inf
     for epoch in tqdm(range(num_epochs), leave=False):
         loss, _, auto_encoder_model = train_model(auto_encoder_model, unlabelled_trainloader, optimizer, criterion)
-        test_loss = evaluate_autoencoder(auto_encoder_model, testloader, criterion)
-        tqdm.write("epoch: {} train loss: {} test loss: {} time elapsed: {}".format(epoch, loss, test_loss,
+        # test_loss = evaluate_autoencoder(auto_encoder_model, testloader, criterion)
+        tqdm.write("epoch: {} train loss: {} test loss: {} time elapsed: {}".format(epoch, loss, 0,
                                                                                     time.time() - tic))
         all_losses.append(loss)
-        all_test_losses.append(test_loss)
+        # all_test_losses.append(test_loss)
 
         # subset_indices = random.sample(range(0, len(testset)), 10)
         # subset = torch.utils.data.Subset(testset, subset_indices)
@@ -60,7 +60,7 @@ def pretrain(num_epochs, unlabelled_trainloader, testloader, folder_name, lr):
     all_losses, all_test_losses = train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainloader,
                                                             testloader, optimizer, criterion, folder_name)
     json.dump(all_losses, open("{}_auto_encoder_loss.json".format(folder_name), 'w'))
-    json.dump(all_test_losses, open("{}_auto_encoder_test_loss.json".format(folder_name), 'w'))
+    # json.dump(all_test_losses, open("{}_auto_encoder_test_loss.json".format(folder_name), 'w'))
     return auto_encoder_model, all_losses, all_test_losses
 
 if __name__ == "__main__":
