@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
     labelled_trainloader, _, testset, testloader = get_data(percentage_labelled, 0.0, batch_size)
 
-    folder_name = '{}_{}_runs'.format(percentage_labelled, "0.0")a
+    folder_name = '{}_{}_runs'.format(percentage_labelled, "0.0")
     if not os.path.exists(folder_name):
         os.mkdir(folder_name)
 
