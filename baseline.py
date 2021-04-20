@@ -24,6 +24,7 @@ def baseline_wrapper(finetuner_model, num_epochs, labelled_trainloader, testload
     all_train_accuracies = []
     all_test_accuracies = []
     prev_loss = np.inf
+    stored_accuracy = False
     for epoch in tqdm(range(num_epochs), leave=False):
         loss, train_accuracy, finetuner_model = train_model(finetuner_model, labelled_trainloader, optimizer,
                                                             criterion, classification=True)
@@ -46,6 +47,9 @@ def baseline_wrapper(finetuner_model, num_epochs, labelled_trainloader, testload
         if loss < prev_loss:
             prev_loss = loss
             torch.save(finetuner_model.state_dict(), "{}/finetuner.pt".format(folder_name))
+        if test_accuracy > 0.40 and not stored_accuracy:
+            stored_accuracy = True
+            json.dump([time.time() - tic, epoch], open("{}/time_to_accuracy.json".format(folder_name), 'w'))
 
     total_time = time.time() - tic
     print("total time taken: {}".format(total_time))
