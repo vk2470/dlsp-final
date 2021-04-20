@@ -153,6 +153,19 @@ class BaseLine(nn.Module):
     """
     def __init__(self, num_classes):
         super(BaseLine, self).__init__()
+
+        self.encoder_layer_0 = nn.Conv2d(3, 16, 3, padding=1, stride=2)
+        self.encoder_layer_1 = nn.Conv2d(16, 32, 3, padding=1, stride=2)
+        self.relu = nn.ReLU()
+        self.encoder_layer_2 = nn.Conv2d(32, 64, 5)
+        self.encoder = nn.Sequential(  # like the Composition layer you built
+            self.encoder_layer_0,
+            self.relu,
+            self.encoder_layer_1,
+            self.relu,
+            self.encoder_layer_2
+        )
+
         self.conv1 = nn.Conv2d(64, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 16, 3, padding=1)
         self.fc1 = nn.Linear(16 * 4 * 4, num_classes)
@@ -160,8 +173,9 @@ class BaseLine(nn.Module):
         self.fc_layers = nn.Sequential(self.fc1)
 
     def forward(self, x):
+        x = self.encoder(x)
         x = self.finetuner(x)
-        print(x.shape)
+        # print(x.shape)
         x = x.view(-1, 16 * 4 * 4)
         x = self.fc_layers(x)
         return x
