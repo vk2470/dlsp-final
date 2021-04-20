@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     labelled_trainloader, _, testset, testloader = get_data(1.0, 0.0, batch_size)
 
-    folder_name = '{}_{}_runs'.format("1.0", "0.0")
+    folder_name = '.'.format("1.0", "0.0")
     if not os.path.exists(folder_name):
         os.mkdir(folder_name)
 
