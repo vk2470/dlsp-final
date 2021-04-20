@@ -78,14 +78,16 @@ if __name__ == '__main__':
     parser.add_argument("--baseline_num_epochs", type=int)
     parser.add_argument("--baseline_lr", type=float)
     parser.add_argument("--batch_size", type=int)
+    parser.add_argument("--percentage_labelled")
 
     args = parser.parse_args()
     baseline_learning_rate = float(args.baseline_lr)
     batch_size = int(args.batch_size)
+    percentage_labelled = float(args.percentage_labelled)
 
-    labelled_trainloader, _, testset, testloader = get_data(1.0, 0.0, batch_size)
+    labelled_trainloader, _, testset, testloader = get_data(percentage_labelled, 0.0, batch_size)
 
-    folder_name = '.'.format("1.0", "0.0")
+    folder_name = '{}_{}_runs'.format(percentage_labelled, "0.0")a
     if not os.path.exists(folder_name):
         os.mkdir(folder_name)
 

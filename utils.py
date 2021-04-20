@@ -51,7 +51,7 @@ def get_data(percentage_labelled, percentage_unlabelled, batch_size=32):
         subset = torch.utils.data.Subset(trainset, labelled_indices)
         all_labelled_datasets.extend(subset)
 
-        if unlabelled_indices:
+        if percentage_unlabelled > 0:
             unlabelled_indices = random.sample(unlabelled_indices, int(percentage_unlabelled * len(unlabelled_indices)))
             subset = torch.utils.data.Subset(trainset, unlabelled_indices)
             all_unlabelled_datasets.extend(subset)
