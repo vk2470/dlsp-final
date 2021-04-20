@@ -29,6 +29,8 @@ if __name__ == '__main__':
     pretrainer_backbone_lr = float(args.pretrainer_backbone_lr)
     batch_size = int(args.batch_size)
 
+    print("Starting {} {}".format(percentage_labelled, percentage_unlabelled))
+
     labelled_trainloader, unlabelled_trainloader, testset, testloader = get_data(percentage_labelled,
                                                                                  percentage_unlabelled, batch_size)
 

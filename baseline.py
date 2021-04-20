@@ -89,6 +89,8 @@ if __name__ == '__main__':
     batch_size = int(args.batch_size)
     percentage_labelled = float(args.percentage_labelled)
 
+    print("Starting {} {}".format(percentage_labelled, 0.0))
+
     labelled_trainloader, _, testset, testloader = get_data(percentage_labelled, 0.0, batch_size)
 
     folder_name = '{}_{}_runs'.format(percentage_labelled, "0.0")
