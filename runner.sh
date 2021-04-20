@@ -1,3 +1,53 @@
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.1 --percentage_unlabelled 0.01 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.1 --percentage_unlabelled 0.03 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.1 --percentage_unlabelled 0.05 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.1 --percentage_unlabelled 0.07 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.1 --percentage_unlabelled 0.09 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.3 --percentage_unlabelled 0.01 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.3 --percentage_unlabelled 0.03 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.3 --percentage_unlabelled 0.05 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.3 --percentage_unlabelled 0.07 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.3 --percentage_unlabelled 0.09 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.5 --percentage_unlabelled 0.01 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.5 --percentage_unlabelled 0.03 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.5 --percentage_unlabelled 0.05 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.5 --percentage_unlabelled 0.07 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.5 --percentage_unlabelled 0.09 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.7 --percentage_unlabelled 0.01 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.7 --percentage_unlabelled 0.03 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.7 --percentage_unlabelled 0.05 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.7 --percentage_unlabelled 0.07 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.7 --percentage_unlabelled 0.09 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.9 --percentage_unlabelled 0.01 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.9 --percentage_unlabelled 0.03 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.9 --percentage_unlabelled 0.05 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.9 --percentage_unlabelled 0.07 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
+python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.9 --percentage_unlabelled 0.09 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
+
 python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.1 --percentage_unlabelled 0.1 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
 
 python trainer.py --pretrainer_num_epochs 10 --finetuner_num_epochs 100 --percentage_labelled 0.1 --percentage_unlabelled 0.3 --finetuner_lr 0.001 --pretrainer_lr 0.001 --pretrainer_backbone_lr 0.0001 --batch_size 64
