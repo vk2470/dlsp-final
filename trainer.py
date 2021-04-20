@@ -52,8 +52,8 @@ if __name__ == '__main__':
                                                                testloader, pretrainer_folder_name,
                                                                pretrainer_learning_rate)
 
-    # for param in auto_encoder_model.parameters():
-    #     param.requires_grad = False
+    for param in auto_encoder_model.parameters():
+        param.requires_grad = False
 
     all_train_losses, all_train_accuracies, all_finetuned_test_losses, all_test_accuracies = \
         finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, finetuner_folder_name,

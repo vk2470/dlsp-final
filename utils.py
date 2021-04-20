@@ -75,10 +75,8 @@ class Autoencoder(nn.Module):
         self.encoder_layer_2 = nn.Conv2d(32, 64, 5)
         self.encoder = nn.Sequential(  # like the Composition layer you built
             self.encoder_layer_0,
-            nn.Dropout(p=0.5),
             self.relu,
             self.encoder_layer_1,
-            nn.Dropout(p=0.5),
             self.relu,
             self.encoder_layer_2
         )
@@ -111,7 +109,7 @@ class FineTuner(nn.Module):
         self.conv1 = nn.Conv2d(64, 32, 3, padding=1)
         self.conv2 = nn.Conv2d(32, 16, 3, padding=1)
         self.fc1 = nn.Linear(16 * 4 * 4, num_classes)
-        self.finetuner = nn.Sequential(self.conv1, nn.ReLU(), nn.Dropout(p=0.8), self.conv2, nn.ReLU(), nn.Dropout(0.8))
+        self.finetuner = nn.Sequential(self.conv1, nn.ReLU(), nn.Dropout(p=0.4), self.conv2, nn.ReLU(), nn.Dropout(0.4))
         self.fc_layers = nn.Sequential(self.fc1)
 
     def forward(self, x):
