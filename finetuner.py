@@ -18,6 +18,17 @@ classes = ('plane', 'car', 'bird', 'cat',
 
 
 def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloader, optimizer, criterion, folder_name):
+    """
+    Wrapper function that calls train_model and evaluate_classification from utils.py
+    :param finetuner_model: Model instance of the finetuner model
+    :param num_epochs: Total number of epochs for training
+    :param labelled_trainloader: Dataloader object for training
+    :param testloader: Dataloader object for testing
+    :param optimizer: Optimizer object
+    :param criterion: Loss function object
+    :param folder_name: Folder where loss and accuracy values are stored
+    :return: train losses list, train accuracy list, test loss list and test accuracy list
+    """
     tic = time.time()
     all_train_losses = []
     all_test_losses = []
@@ -61,6 +72,17 @@ def finetuner_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloa
 
 def finetune(auto_encoder_model, finetuner_num_epochs, labelled_trainloader, testloader, folder_name,
              finetuning_lr, pretraining_lr):
+    """
+    Interface between external files/calling functions and baseline training
+    :param auto_encoder_model: Pretraining model (autoencoder)
+    :param finetuner_num_epochs: Number of epochs for training
+    :param labelled_trainloader: Dataloader object for training
+    :param testloader: Dataloader object for testing
+    :param folder_name: Folder where loss and accuracy values are stored
+    :param finetuning_lr: Learning rate for finetuning network
+    :param pretraining_lr: learning rate for pretraining network (if we are training in tandem)
+    :return: train losses list, train accuracy list, test loss list and test accuracy list
+    """
     finetuner = FineTuner(auto_encoder_model, len(classes))
     finetuner = finetuner.to(device)
 

@@ -12,6 +12,17 @@ print("device is", device)
 
 def train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainloader, testloader, optimizer,
                               criterion, folder_name):
+    """
+    Wrapper function that calls train_model and evaluate_classification from utils.py
+    :param auto_encoder_model: Model instance of the autoencoder (pretrainer) model
+    :param num_epochs: Total number of epochs for training
+    :param unlabelled_trainloader: Dataloader object for training
+    :param testloader: Dataloader object for testing
+    :param optimizer: Optimizer object
+    :param criterion: Loss function object
+    :param folder_name: Folder where loss and accuracy values are stored
+    :return: train losses list, train accuracy list, test loss list and test accuracy list
+    """
     tic = time.time()
     all_losses = []
     all_test_losses = []
@@ -52,6 +63,15 @@ def train_autoencoder_wrapper(auto_encoder_model, num_epochs, unlabelled_trainlo
 
 
 def pretrain(num_epochs, unlabelled_trainloader, testloader, folder_name, lr):
+    """
+    Interface between external files/calling functions and baseline training
+    :param num_epochs: Number of epochs for training
+    :param unlabelled_trainloader: Dataloader object for training
+    :param testloader: Dataloader object for testing
+    :param folder_name: Folder where loss and accuracy values are stored
+    :param lr: learning rate for pretraining network (if we are training in tandem)
+    :return: train losses list, train accuracy list, test loss list and test accuracy list
+    """
     auto_encoder_model = Autoencoder()
     auto_encoder_model = auto_encoder_model.to(device)
     criterion = nn.MSELoss()

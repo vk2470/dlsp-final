@@ -17,7 +17,18 @@ classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
 
-def baseline_wrapper(finetuner_model, num_epochs, labelled_trainloader, testloader, optimizer, criterion, folder_name):
+def baseline_wrapper(baseline_model, num_epochs, labelled_trainloader, testloader, optimizer, criterion, folder_name):
+    """
+    Wrapper function that calls train_model and evaluate_classification from utils.py
+    :param baseline_model: Model instance of the baseline model
+    :param num_epochs: Total number of epochs for training
+    :param labelled_trainloader: Dataloader object for training
+    :param testloader: Dataloader object for testing
+    :param optimizer: Optimizer object
+    :param criterion: Loss function object
+    :param folder_name: Folder where loss and accuracy values are stored
+    :return: train losses list, train accuracy list, test loss list and test accuracy list
+    """
     tic = time.time()
     all_train_losses = []
     all_test_losses = []
@@ -26,13 +37,13 @@ def baseline_wrapper(finetuner_model, num_epochs, labelled_trainloader, testload
     prev_loss = np.inf
     stored_accuracy = False
     for epoch in tqdm(range(num_epochs), leave=False):
-        loss, train_accuracy, finetuner_model = train_model(finetuner_model, labelled_trainloader, optimizer,
+        loss, train_accuracy, baseline_model = train_model(baseline_model, labelled_trainloader, optimizer,
                                                             criterion, classification=True)
         all_train_losses.append(loss)
         all_train_accuracies.append(train_accuracy)
         json.dump(all_train_losses, open("{}/epoch_{}_loss.json".format(folder_name, epoch), 'w'))
         json.dump(all_train_accuracies, open("{}/epoch_{}_accuracy.json".format(folder_name, epoch), 'w'))
-        test_loss, test_accuracy = evaluate_classification(finetuner_model, testloader, criterion)
+        test_loss, test_accuracy = evaluate_classification(baseline_model, testloader, criterion)
         tqdm.write(
             "epoch: {} train loss: train accuracy: {} {} test loss: {} test accuracy: {} time elapsed: {}".format(epoch,
                                                                                                                   loss,
@@ -46,7 +57,7 @@ def baseline_wrapper(finetuner_model, num_epochs, labelled_trainloader, testload
         json.dump(all_test_accuracies, open("{}/epoch_{}_test_accuracy.json".format(folder_name, epoch), 'w'))
         if loss < prev_loss:
             prev_loss = loss
-            torch.save(finetuner_model.state_dict(), "{}/finetuner.pt".format(folder_name))
+            torch.save(baseline_model.state_dict(), "{}/baseline.pt".format(folder_name))
         if test_accuracy > 0.40 and not stored_accuracy:
             stored_accuracy = True
             json.dump([time.time() - tic, epoch], open("{}/time_to_accuracy.json".format(folder_name), 'w'))
@@ -54,12 +65,21 @@ def baseline_wrapper(finetuner_model, num_epochs, labelled_trainloader, testload
     total_time = time.time() - tic
     print("total time taken: {}".format(total_time))
     json.dump([total_time], open('{}/time_taken.json'.format(folder_name), 'w'))
-    torch.save(finetuner_model.state_dict(), "{}/final_finetuner.pt".format(folder_name))
+    torch.save(baseline_model.state_dict(), "{}/final_baseline.pt".format(folder_name))
     return all_train_losses, all_train_accuracies, all_test_losses, all_test_accuracies
 
 
 def baseline(baseline_num_epochs, labelled_trainloader, testloader, folder_name,
              baseline_lr):
+    """
+    Interface between external files/calling functions and baseline training
+    :param baseline_num_epochs: Number of epochs for training
+    :param labelled_trainloader: Dataloader object for training
+    :param testloader: Dataloader object for testing
+    :param folder_name: Folder where loss and accuracy values are stored
+    :param baseline_lr: Learning rate
+    :return: train losses list, train accuracy list, test loss list and test accuracy list
+    """
     baseline = BaseLine(len(classes))
     baseline = baseline.to(device)
 
