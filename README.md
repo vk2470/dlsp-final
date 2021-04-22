@@ -17,3 +17,6 @@ To train the baseline model:
 python baseline.py --baseline_num_epochs <num_epochs> --percentage_labelled <% labelled> --baseline_lr <baseline learning rate> --batch_size <batch_size>
 ```
 This will also create the loss and accuracy files in the corresponding files in <percentage_labelled>_0.0 folder
+
+
+autoencoder.ipynb is deprecated, was used for experimentation.
